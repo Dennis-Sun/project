@@ -6,8 +6,8 @@ from pyspark import SparkContext, SparkConf
 
 def parseTweetsThruLocation(tweet):
     """Parses a line of tweet string."""
-    parts = tweet.rsplit('|',3)[::-1]
-    return parts[0], parts[2]
+    parts = tweet.rsplit('|',3)
+    return parts[2], parts[0]
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:
@@ -28,7 +28,7 @@ if __name__ == "__main__":
     #print("\n\nKEYS: ", tweets.keys().collect(), "\n\n")
     #print("\n\nVALUES: ", tweets.values().collect(), "\n\n")
     tweets = tweets.distinct().groupByKey()
-    
+
     # Write output using DataFrame, using Parquet format (the only option available for pyspark 2.0.0)
     tweetsDF = tweets.toDF(["country", "text"])
     #tweetsDF.write.mode('overwrite').partitionBy("country").parquet(sys.argv[2])
