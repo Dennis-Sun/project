@@ -1,3 +1,4 @@
 #!/bin/bash
-#spark-submit ~/project/PartA.py /project/small_processed
-spark-submit ~/project/PartB_2.py /project/test/clusterStore-21-0-1509733840017.txt /project/test/output
+hadoop fs -rm -R /project/output
+hadoop fs -mkdir /project/output
+spark-submit ~/project/PartB_2.py /project/test/*.txt /project/output
