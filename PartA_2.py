@@ -26,10 +26,10 @@ if __name__ == "__main__":
 
     # Loads input file. Partition based on location. The first item returned becomes the key automatically.
     tweets = sc.textFile(sys.argv[1], 20)
-    print("\n\nTWEETS: ", tweets.collect(), "\n\n")
+    #print("\n\nTWEETS: ", tweets.collect(), "\n\n")
     tweets = tweets.map(lambda tweet: parseTweetsThruTimestamp(tweet))
-    print("\n\nKEYS: ", tweets.keys().collect(), "\n\n")
-    print("\n\nTWEETS: ", tweets.collect(), "\n\n")
+    #print("\n\nKEYS: ", tweets.keys().collect(), "\n\n")
+    #print("\n\nTWEETS: ", tweets.collect(), "\n\n")
     tweets = tweets.distinct().groupByKey()
 
     # Write output using DataFrame, using Parquet format (the only option available for pyspark 2.0.0)
