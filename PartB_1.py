@@ -2,6 +2,7 @@ from __future__ import print_function
 
 import sys
 from pyspark.sql import SparkSession
+from pyspark.sql.types import StructType
 from pyspark import SparkContext, SparkConf
 
 if __name__ == "__main__":
