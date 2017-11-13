@@ -24,7 +24,7 @@ if __name__ == "__main__":
     spark = SparkSession(sc)
 
     # Loads input file. Partition based on location. The first item returned becomes the key automatically.
-    tweets = sc.textFile(sys.argv[1]).map(lambda tweet: parseTweetsThruLocation(tweet))
+    tweets = sc.textFile(sys.argv[1], 20).map(lambda tweet: parseTweetsThruLocation(tweet))
     #print("\n\nKEYS: ", tweets.keys().collect(), "\n\n")
     #print("\n\nVALUES: ", tweets.values().collect(), "\n\n")
     tweets = tweets.distinct().groupByKey()
