@@ -8,7 +8,7 @@ public class TweetPartitioner implements Partitioner<String> {
 
     }
 
-    public int partition(String key, int a_numPartitions) {
+    public int partition(long key, int a_numPartitions) {
         int partition = 0;
         int offset = key.lastIndexOf('.');
         if (offset > 0) {
