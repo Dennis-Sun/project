@@ -60,10 +60,11 @@ public class TweetConsumerGroup {
     public static void main(String[] args) {
         String zooKeeper = args[0];
         String groupId = args[1];
-        String topic = args[2];
-        int threads = Integer.parseInt(args[3]);
+        //String topic = args[2];
+        int threads = Integer.parseInt(args[2]);
 
-        TweetConsumerGroup example = new TweetConsumerGroup(zooKeeper, groupId, topic);
+        TweetConsumerGroup countries = new TweetConsumerGroup(zookeeper, groupId, 'country');
+        TweetConsumerGroup time  = new TweetConsumerGroup(zooKeeper, groupId, 'time');
         example.run(threads);
 
         try {
