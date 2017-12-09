@@ -6,8 +6,13 @@ from pyspark import SparkContext, SparkConf
 
 def parseTweetsThruLocation(tweet):
     """Parses a line of tweet string."""
-    parts = tweet.rsplit('|',3)
-    return parts[2], parts[0]
+    try:
+        parts = tweet.rsplit('|',3)
+        return parts[2], parts[0]
+    except IndexError:
+        print('======Error detected in parsing tweets thru location')
+        print(tweet)
+        return "Error", tweet
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:
