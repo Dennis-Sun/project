@@ -1,10 +1,12 @@
 #!/bin/bash
 hadoop fs -rm -R /project/output
 hadoop fs -mkdir /project/output
+rm intermediate/*
+rm stats
 
 dev=/tmp/dev
 diskstats=/tmp/diskstats
-size=80g
+size=1g
 
 vm=vm-25-2
 ssh -t $vm "sudo sh -c 'sync; echo 3 > /proc/sys/vm/drop_caches; cat /proc/net/dev > $dev; cat /proc/diskstats > $diskstats'"
@@ -99,7 +101,7 @@ scp $vm:$dev ~/project/intermediate/dev_vm5
 scp $vm:$diskstats ~/project/intermediate/disk_vm5
 receive2_5=`grep eth0 ~/project/intermediate/dev_vm5 | awk '{print $2}'`
 transmit2_5=`grep eth0 ~/project/intermediate/dev_vm5 | awk '{print $10}'`
-read2_5=`grep vda1 ~/intermediate/disk_vm5 | awk '{print $6}'`
+read2_5=`grep vda1 ~/project/intermediate/disk_vm5 | awk '{print $6}'`
 write2_5=`grep vda1 ~/project/intermediate/disk_vm5 | awk '{print $10}'`
 
 echo 'receive = '$(($receive2+$receive2_2+$receive2_3+$receive2_4+$receive2_5-$receive1-$receive1_2-$receive1_3-$receive1_4-$receive1_5)) >> ~/project/stats
