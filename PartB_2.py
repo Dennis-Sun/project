@@ -7,7 +7,7 @@ from pyspark import SparkContext, SparkConf
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:
-        print >> sys.stderr, "Usage: PartB_1.py <inputpath> <outputpath>"
+        print >> sys.stderr, "Usage: PartB_2.py <inputpath> <outputpath>"
         exit(-1)
 
     # Initialize the spark context.
@@ -30,9 +30,9 @@ if __name__ == "__main__":
 
     # Use SparkSQL to perform partitioning
     tweets.createOrReplaceTempView("table")
-    tweets_timestamp = spark.sql("SELECT timestamp, text FROM table")
+    tweets_timestamp = spark.sql("SELECT SUBSTR(timestamp,12,2) AS hour, text FROM table WHERE timestamp <> '' AND LENGTH(timestamp) = 28")
     #tweets_country.collect()
 
     # Write output using DataFrame, using Parquet format (the only option available for pyspark 2.0.0)
-    tweets_timestamp.write.save(sys.argv[2], "parquet", "overwrite", "timestamp")
+    tweets_timestamp.write.save(sys.argv[2], "parquet", "overwrite", "hour")
     sc.stop()

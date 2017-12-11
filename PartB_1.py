@@ -30,7 +30,7 @@ if __name__ == "__main__":
 
     # Use SparkSQL to perform partitioning
     tweets.createOrReplaceTempView("table")
-    tweets_country = spark.sql("SELECT country, text FROM table")
+    tweets_country = spark.sql("SELECT country, text FROM table WHERE country <> '' AND LENGTH(country) = 2")
     #tweets_country.collect()
 
     # Write output using DataFrame, using Parquet format (the only option available for pyspark 2.0.0)

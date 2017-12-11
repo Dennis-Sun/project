@@ -8,7 +8,9 @@ def parseTweetsThruLocation(tweet):
     """Parses a line of tweet string."""
     try:
         parts = tweet.rsplit('|',3)
-        return parts[2], parts[0]
+        if len(parts) < 3:
+            return "Error", tweet
+        return parts[-1], parts[0]
     except IndexError:
         print('======Error detected in parsing tweets thru location')
         print(tweet)

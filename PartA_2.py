@@ -6,9 +6,18 @@ from pyspark import SparkContext, SparkConf
 
 def parseTweetsThruTimestamp(tweet):
     """Parses a line of tweet string."""
-    parts = tweet.rsplit('|',3)
-    minutes = parts[-2].rsplit(':',3) # take 'minutes' as the key
-    return minutes[1], parts[0]
+    try:
+        parts = tweet.rsplit('|',3)
+        if len(parts) < 3:
+            return "Error", tweet
+        hours = parts[-2].rsplit(':',3) # take 'hours' as the key
+        if len(hours) < 3:
+            return "Error", tweet
+        return hours[0][-2:], parts[0]
+    except IndexError:
+        print('======Error detected in parsing tweets thru timestamp')
+        print(tweet)
+        return "Error", tweet
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:
