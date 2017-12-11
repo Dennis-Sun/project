@@ -1,12 +1,13 @@
 #!/bin/bash
-hadoop fs -rm -R /project/output
-hadoop fs -mkdir /project/output
+#hadoop fs -rm -R /project/output
+#hadoop fs -mkdir /project/output
+hadoop fs -rm -R /project/output/b2
 rm intermediate/*
 rm stats
 
 dev=/tmp/dev
 diskstats=/tmp/diskstats
-size=1g
+size=$1
 
 vm=vm-25-2
 ssh -t $vm "sudo sh -c 'sync; echo 3 > /proc/sys/vm/drop_caches; cat /proc/net/dev > $dev; cat /proc/diskstats > $diskstats'"
@@ -51,7 +52,7 @@ read1=`grep vda1 /proc/diskstats | awk '{print $6}'`
 write1=`grep vda1 /proc/diskstats | awk '{print $10}'`
 
 start=$(date +%s)
-spark-submit ~/project/PartB_2.py /project/tmp/tmp_$size /project/output
+spark-submit ~/project/PartB_2.py /project/tmp/tmp_$size /project/output/b2
 #spark-submit ~/project/PartB_2.py /project/test/*.txt /project/output
 #spark-submit ~/project/PartB_2.py /project/tmp/tmp_1g /project/output
 #spark-submit ~/project/PartB_2.py /project/tmp/tmp_2g /project/output
