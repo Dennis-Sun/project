@@ -1,0 +1,64 @@
+2017-12-16 23:30:20 INFO  ConsumerConfig:165 - ConsumerConfig values: 
+	request.timeout.ms = 40000
+	check.crcs = true
+	retry.backoff.ms = 100
+	ssl.truststore.password = null
+	ssl.keymanager.algorithm = SunX509
+	receive.buffer.bytes = 32768
+	ssl.cipher.suites = null
+	ssl.key.password = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	ssl.provider = null
+	sasl.kerberos.service.name = null
+	session.timeout.ms = 30000
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	bootstrap.servers = [localhost:9092]
+	client.id = partition
+	fetch.max.wait.ms = 500
+	fetch.min.bytes = 1024
+	key.deserializer = class org.apache.kafka.common.serialization.ByteArrayDeserializer
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	auto.offset.reset = latest
+	value.deserializer = class org.apache.kafka.common.serialization.StringDeserializer
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.1, TLSv1]
+	partition.assignment.strategy = [org.apache.kafka.clients.consumer.RangeAssignor]
+	ssl.endpoint.identification.algorithm = null
+	max.partition.fetch.bytes = 1048576
+	ssl.keystore.location = null
+	ssl.truststore.location = null
+	ssl.keystore.password = null
+	metrics.sample.window.ms = 30000
+	metadata.max.age.ms = 300000
+	security.protocol = PLAINTEXT
+	auto.commit.interval.ms = 5000
+	ssl.protocol = TLS
+	sasl.kerberos.min.time.before.relogin = 60000
+	connections.max.idle.ms = 540000
+	ssl.trustmanager.algorithm = PKIX
+	group.id = group2
+	enable.auto.commit = true
+	metric.reporters = []
+	ssl.truststore.type = JKS
+	send.buffer.bytes = 131072
+	reconnect.backoff.ms = 50
+	metrics.num.samples = 2
+	ssl.keystore.type = JKS
+	heartbeat.interval.ms = 3000
+
+2017-12-16 23:30:20 INFO  AppInfoParser:82 - Kafka version : 0.9.0.0
+2017-12-16 23:30:20 INFO  AppInfoParser:83 - Kafka commitId : fc7243c2af4b2b4a
+2017-12-16 23:30:20 WARN  NetworkClient:629 - Error while fetching metadata with correlation id 1 : {test4=LEADER_NOT_AVAILABLE}
+[] topic-partitions are revoked from group2 1
+[] topic-partitions are assigned from group2 1
+2017-12-16 23:30:26 INFO  AbstractCoordinator:633 - Attempt to heart beat failed since the group is rebalancing, try to re-join group.
+[] topic-partitions are revoked from group2 1
+[] topic-partitions are assigned from group2 1
+false
+false
+false
+false
+false
+false
+false
+false
+false
