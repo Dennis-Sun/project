@@ -16,6 +16,7 @@ import java.util.Scanner;
 import java.util.HashMap;
 import java.util.Set;
 import java.lang.StringBuffer;
+import java.lang.management.*;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
@@ -38,8 +39,7 @@ public class TimeConsumer {
 		long start = System.currentTimeMillis();
 		// check whether the number of input paramter is 3
 		if (argv.length != 3) {
-			System.err.printf("Usage: %s <topicName> <groupId> <consumerId>\n",
-					TimeConsumer.class.getSimpleName());
+			System.err.printf("Usage: %s <topicName> <groupId> <consumerId>\n", TimeConsumer.class.getSimpleName());
 			System.exit(-1);
 		}
 
@@ -73,17 +73,19 @@ public class TimeConsumer {
 			configProperties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
 			configProperties.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
 			configProperties.put(ConsumerConfig.CLIENT_ID_CONFIG, "partition");
-			configProperties.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, "30000");	
+			configProperties.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, "300000");	
+			configProperties.put(ConsumerConfig.REQUEST_TIMEOUT_MS_CONFIG, "305000");	
 			//Figure out where to start processing messages from
 			kafkaConsumer = new KafkaConsumer<String, String>(configProperties);
 			kafkaConsumer.subscribe(Arrays.asList(topicName), new ConsumerRebalanceListener() {
-					public void onPartitionsRevoked(Collection<TopicPartition> partitions) {
+				public void onPartitionsRevoked(Collection<TopicPartition> partitions) {
 					System.out.printf("%s topic-partitions are revoked from %s %s\n", Arrays.toString(partitions.toArray()), groupId, consumerId);
-					}
-					public void onPartitionsAssigned(Collection<TopicPartition> partitions) {
+				}
+				public void onPartitionsAssigned(Collection<TopicPartition> partitions) {
 					System.out.printf("%s topic-partitions are assigned from %s %s\n", Arrays.toString(partitions.toArray()), groupId, consumerId);
-					}
-					});
+				}
+			});
+			MemoryMXBean memoryBean = ManagementFactory.getMemoryMXBean();
 
 			//Start processing messages
 			try {
@@ -99,7 +101,7 @@ public class TimeConsumer {
 				while (!done) {
 
 					count++;
-					ConsumerRecords<String, String> records = kafkaConsumer.poll(1000);
+					ConsumerRecords<String, String> records = kafkaConsumer.poll(100000);
 					//System.out.println(last);
 					// set done to true if empty records
 					if (last && records.isEmpty()) {
@@ -128,21 +130,34 @@ public class TimeConsumer {
 						if(tweets.containsKey(hour)) {
 							// check whether the current string is too long
 							StringBuffer cur = tweets.get(hour);
-							if (cur.length() > 40000000) {
+							//try {
+							//	tweets.put(hour, cur.append(line).append("\n"));
+							//} catch (OutOfMemoryError e) {
+							//	System.out.println("large");
+							//	MemoryUsage heapUsage = memoryBean.getHeapMemoryUsage();
+							//	long maxMemory = heapUsage.getMax() / 1000000;
+							//	long usedMemory = heapUsage.getUsed() / 1000000;
+							//	System.out.println("Memory Use :" + usedMemory + "M/" + maxMemory + "M");
+							//	totalWrite += writeHDFS(tweets, prefix);
+							//	tweets = new HashMap<String, StringBuffer>();
+							//	tweets.put(hour, new StringBuffer(line).append("\n"));
+							//} 
+							if (cur.length() > 30000000) {
 								// write to HDFS if the current string is too long
 								System.out.println("large");
 								totalWrite += writeHDFS(tweets, prefix);
 								tweets = new HashMap<String, StringBuffer>();
+								tweets.put(hour, new StringBuffer(line).append("\n"));
 							} else {
 								try {
 									tweets.put(hour, cur.append(line).append("\n"));
 								} catch (OutOfMemoryError e) {
 									System.out.println(cur.length());
 									System.out.println(line.length());
-									//MemoryUsage heapUsage = memoryBean.getHeapMemoryUsage();
-									//long maxMemory = heapUsage.getMax() / MEGABYTE;
-									//long usedMemory = heapUsage.getUsed() / MEGABYTE;
-									//System.out.println(i+ " : Memory Use :" + usedMemory + "M/" + maxMemory + "M");
+									MemoryUsage heapUsage = memoryBean.getHeapMemoryUsage();
+									long maxMemory = heapUsage.getMax() / 1000000;
+									long usedMemory = heapUsage.getUsed() / 1000000;
+									System.out.println("Memory Use :" + usedMemory + "M/" + maxMemory + "M");
 								}
 							}
 						} else {
